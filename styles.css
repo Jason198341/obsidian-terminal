@@ -1,0 +1,59 @@
+/* ─── Container ──────────────────────────────────────────────────────────── */
+
+.obsidian-terminal-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 0;
+  overflow: hidden;
+  background: #0d1117;
+}
+
+.obsidian-terminal-wrapper {
+  flex: 1 1 auto;
+  min-height: 0;       /* critical: allows flex child to shrink below content */
+  overflow: hidden;
+  padding: 6px 8px 4px 8px;
+  box-sizing: border-box;
+}
+
+/* ─── xterm.js overrides ─────────────────────────────────────────────────── */
+
+.obsidian-terminal-wrapper .xterm {
+  height: 100%;
+}
+
+.obsidian-terminal-wrapper .xterm-viewport {
+  overflow-y: auto !important;
+  /* Custom scrollbar to match dark theme */
+  scrollbar-width: thin;
+  scrollbar-color: #30363d #0d1117;
+}
+
+.obsidian-terminal-wrapper .xterm-viewport::-webkit-scrollbar {
+  width: 6px;
+}
+
+.obsidian-terminal-wrapper .xterm-viewport::-webkit-scrollbar-track {
+  background: #0d1117;
+}
+
+.obsidian-terminal-wrapper .xterm-viewport::-webkit-scrollbar-thumb {
+  background: #30363d;
+  border-radius: 3px;
+}
+
+.obsidian-terminal-wrapper .xterm-viewport::-webkit-scrollbar-thumb:hover {
+  background: #484f58;
+}
+
+.obsidian-terminal-wrapper .xterm-screen {
+  /* Ensure canvas fills wrapper */
+  width: 100% !important;
+}
+
+/* ─── Selection ──────────────────────────────────────────────────────────── */
+
+.obsidian-terminal-wrapper .xterm-selection div {
+  background: rgba(38, 79, 120, 0.4);
+}

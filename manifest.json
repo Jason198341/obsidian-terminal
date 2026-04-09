@@ -1,0 +1,10 @@
+{
+  "id": "obsidian-terminal",
+  "name": "Obsidian Terminal",
+  "version": "1.0.0",
+  "minAppVersion": "1.5.0",
+  "description": "Embedded terminal inside Obsidian — opens a shell panel in the vault root",
+  "author": "jasonmoon",
+  "authorUrl": "https://jasonmoon.dev",
+  "isDesktopOnly": true
+}
