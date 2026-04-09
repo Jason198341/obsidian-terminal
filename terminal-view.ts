@@ -179,11 +179,61 @@ export class TerminalView extends ItemView {
       );
     });
 
-    // xterm input → shell stdin
+    // xterm input → shell stdin  (+ local echo, PTY 없으므로 직접 구현)
     this.term.onData((data: string) => {
-      if (this.shell?.stdin?.writable) {
+      if (!this.shell?.stdin?.writable) return;
+
+      const code = data.charCodeAt(0);
+
+      // Escape sequences (arrow keys, F-keys …) — 셸에 전달만, 에코 안 함
+      if (data.startsWith("\x1b")) {
         this.shell.stdin.write(data);
+        return;
       }
+
+      // Enter (\r) → 셸엔 \n, 화면엔 줄바꿈
+      if (data === "\r") {
+        this.term?.write("\r\n");
+        this.shell.stdin.write("\n");
+        return;
+      }
+
+      // Backspace (\x7f) → 한 글자 지우기
+      if (data === "\x7f") {
+        this.term?.write("\b \b");
+        this.shell.stdin.write("\x7f");
+        return;
+      }
+
+      // Ctrl+C → 인터럽트
+      if (data === "\x03") {
+        this.term?.write("^C\r\n");
+        this.shell.stdin.write("\x03");
+        return;
+      }
+
+      // Ctrl+L → 화면 클리어
+      if (data === "\x0c") {
+        this.term?.clear();
+        this.shell.stdin.write("\x0c");
+        return;
+      }
+
+      // Ctrl+D → EOF
+      if (data === "\x04") {
+        this.shell.stdin.write("\x04");
+        return;
+      }
+
+      // 기타 제어문자 — 에코 없이 전달
+      if (code < 32) {
+        this.shell.stdin.write(data);
+        return;
+      }
+
+      // 일반 출력 가능 문자 → 에코 + 셸 전달
+      this.term?.write(data);
+      this.shell.stdin.write(data);
     });
   }
 
